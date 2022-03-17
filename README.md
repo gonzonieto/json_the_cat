@@ -1,6 +1,6 @@
 # json_the_cat
 
-This program will query TheCatAPI for info about a cat breed and prints a report of the name, lifespan, and description. Users specify the desired cat breed by providing a command line argument.
+This program queries TheCatAPI for info about a cat breed and prints a report of the name, lifespan, and description. Users specify the desired cat breed by providing a command line argument.
 
 ## Usage
 
