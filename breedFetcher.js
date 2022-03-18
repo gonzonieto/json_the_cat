@@ -9,19 +9,20 @@ const fetchBreedDescription = (breedName, callback) => {
       return;
     }
 
-    const breedReport = {
-      name: '',
-      lifespan: '',
-      description: '',
-    };
-
     // If an empty array was returned, inform user the breed they searched was not found
-    if (!body.length) {
-      breedReport.description = "Breed not found. Do you even know cats?";
+    if (body === "[]") {
+      error = "Breed not found. Do you even know cats?";
+      callback(error, null);
     } else {
       // TheCatAPI returns an array of objects. For our current use, this array
       // will always contain one item, so we can JSON.parse and then select the first item
       const breed = JSON.parse(body)[0];
+
+      const breedReport = {
+        name: '',
+        lifespan: '',
+        description: '',
+      };
 
       // Isolate the data that needs to appear in the report
       breedReport.name = breed.name;
