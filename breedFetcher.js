@@ -1,33 +1,36 @@
 const request = require('request');
 
-const breedTerm = process.argv[2];
-const URL = "https://api.thecatapi.com/v1/breeds/search?q=" + breedTerm;
+const fetchBreedDescription = (breedName, callback) => {
+  const URL = "https://api.thecatapi.com/v1/breeds/search?q=" + breedName;
 
-request(URL, (error, response, body) => {
-  if (error !== null) {
-    if (error.code === "ENOTFOUND") {
-      console.log("Website not found, please contact the developers at trash@garbage.bin");
-    } else {
-      console.log("Unknown error.");
+  request(URL, (error, response, body) => {
+    if (error !== null) {
+      callback(error, null);
+      return;
     }
-  } else {
+
+    const breedReport = {
+      name: '',
+      lifespan: '',
+      description: '',
+    };
+
+    // If an empty array was returned, inform user the breed they searched was not found
     if (!body.length) {
-      console.log("Breed not found.");
-      console.log("Do you even know cats?");
+      breedReport.description = "Breed not found. Do you even know cats?";
     } else {
       // TheCatAPI returns an array of objects. For our current use, this array
       // will always contain one item, so we can JSON.parse and then select the first item
       const breed = JSON.parse(body)[0];
-      console.clear();
-      console.log("BREED REPORT");
-      console.log("------------");
-      console.log("Name: " + breed.name);
-      console.log();
-      console.log("Lifespan: " + breed.life_span + " years.");
-      console.log();
-      console.log("Description: " + breed.description);
-      console.log();
+
+      // Isolate the data that needs to appear in the report
+      breedReport.name = breed.name;
+      breedReport.lifespan = breed.life_span;
+      breedReport.description = breed.description;
+
+      callback(null, breedReport);
     }
-  }
-  // console.log('statusCode:', response && response.statusCode);
-});
+  });
+};
+
+module.exports = {fetchBreedDescription};
